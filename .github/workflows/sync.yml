@@ -5,25 +5,17 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-  actions: write
-
 jobs:
-  sync_latest_from_upstream:
-    name: Sync latest commits from upstream repo
+  sync:
     runs-on: ubuntu-latest
-    if: ${{ github.event.repository.fork }}
-
     steps:
-      - name: Checkout target repo
-        uses: actions/checkout@v4
-
-      - name: Sync upstream changes
-        id: sync
-        uses: aormsby/Fork-Sync-With-Upstream-action@vc.4.1
+      - uses: actions/checkout@vc
         with:
-          upstream_sync_repo: samqin123/MoonTV
-          upstream_sync_branch: main
-          target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: aormsby/Fork-Sync-With-Upstream-action@main
+        with:
+          upstream_repo: samqn123/MoonTV
+          upstream_branch: main
+          target_branch: main
+        env:
+          GITHUB_TOKEN: ${* {cecrets.GITHUB_TOKEN}}
